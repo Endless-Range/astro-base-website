@@ -1,0 +1,327 @@
+---
+/**
+ * Component Library Demo Page
+ *
+ * Showcases all components in the library with examples.
+ * Use this page as a reference and testing ground.
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navigation from '../components/library/Navigation.astro';
+import HeroMinimal from '../components/library/HeroMinimal.astro';
+import HeroBold from '../components/library/HeroBold.astro';
+import HeroVideo from '../components/library/HeroVideo.astro';
+import SplitSection from '../components/library/SplitSection.astro';
+import FeatureGrid from '../components/library/FeatureGrid.astro';
+import FeatureCard from '../components/library/FeatureCard.astro';
+import CTASimple from '../components/library/CTASimple.astro';
+import CTASplit from '../components/library/CTASplit.astro';
+import ContactForm from '../components/library/ContactForm.astro';
+import Footer from '../components/library/Footer.astro';
+---
+
+<BaseLayout
+  title="Component Library Demo"
+  description="Explore our complete collection of 11 production-ready Astro components including heroes, navigation, forms, CTAs, and more. All components are fully responsive and accessible."
+  ogImage="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&h=630&fit=crop"
+  includeNav={false}
+  includeFooter={false}
+>
+  <!-- Navigation Demo -->
+  <Navigation />
+
+  <!-- Demo Content -->
+  <div class="pt-20">
+    <!-- Section Header Template -->
+    <section class="bg-neutral-900 text-white py-12">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">Component Library Demo</h1>
+        <p class="text-xl text-neutral-300">
+          A showcase of all available components with examples
+        </p>
+      </div>
+    </section>
+
+    <!-- Component Sections -->
+
+    <!-- Hero Sections -->
+    <section class="py-16 bg-neutral-50">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+        <h2 class="text-3xl font-bold mb-2">Hero Components</h2>
+        <p class="text-neutral-600">Three variants for different use cases</p>
+      </div>
+
+      <!-- Minimal Hero -->
+      <div class="mb-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 mb-4">
+          <h3 class="text-xl font-semibold text-primary-600">1. HeroMinimal</h3>
+          <p class="text-sm text-neutral-500">Clean, centered design</p>
+        </div>
+        <HeroMinimal
+          title="Welcome to Our Platform"
+          subtitle="Build amazing websites with our component library"
+          cta={{label: "Get Started", href: "#"}}
+          secondaryCta={{label: "Learn More", href: "#"}}
+        />
+      </div>
+
+      <!-- Bold Hero -->
+      <div class="mb-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 mb-4">
+          <h3 class="text-xl font-semibold text-primary-600">2. HeroBold</h3>
+          <p class="text-sm text-neutral-500">Large typography with gradient option</p>
+        </div>
+        <HeroBold
+          headline="Transform Your <span class='highlight'>Digital Presence</span>"
+          subtext="Join thousands of companies building better websites faster"
+          cta={{label: "Start Free Trial", href: "#"}}
+          secondaryCta={{label: "View Demo", href: "#"}}
+          gradientBackground={true}
+        />
+      </div>
+
+      <!-- Video Hero Note -->
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h3 class="text-xl font-semibold text-primary-600 mb-2">3. HeroVideo</h3>
+          <p class="text-sm text-neutral-600 mb-2">Video background hero (requires video file)</p>
+          <code class="text-xs bg-white px-2 py-1 rounded">
+            &lt;HeroVideo videoSrc="/videos/hero.mp4" title="..." /&gt;
+          </code>
+        </div>
+      </div>
+    </section>
+
+    <!-- Split Sections -->
+    <SplitSection
+      title="Flexible Split Layouts"
+      content="<p class='mb-4'>The SplitSection component creates beautiful two-column layouts that stack responsively on mobile devices.</p><p>Perfect for showcasing features, telling your story, or highlighting key information.</p>"
+      imageSrc="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop"
+      imageAlt="Team collaboration"
+      cta={{label: "Learn More", href: "#"}}
+      imageRight={false}
+      backgroundColor="bg-white"
+    />
+
+    <SplitSection
+      title="Image on the Right"
+      content="<p class='mb-4'>Simply set <code class='bg-neutral-100 px-2 py-1 rounded'>imageRight={true}</code> to swap the layout.</p><p>The content automatically adjusts for optimal readability.</p>"
+      imageSrc="https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&h=600&fit=crop"
+      imageAlt="Office workspace"
+      imageRight={true}
+      backgroundColor="bg-neutral-50"
+    />
+
+    <!-- Feature Grid -->
+    <FeatureGrid
+      title="Feature Cards & Grid"
+      subtitle="Showcase your services or features in an organized grid layout"
+      columns={3}
+    >
+      <FeatureCard
+        icon="fa6-solid:rocket"
+        title="Fast Performance"
+        description="Lightning-fast load times with optimized components and minimal JavaScript."
+        link={{href: "#", label: "Learn more"}}
+      />
+      <FeatureCard
+        icon="fa6-solid:palette"
+        title="Beautiful Design"
+        description="Modern, clean aesthetics that work for any brand or industry."
+        link={{href: "#"}}
+      />
+      <FeatureCard
+        icon="fa6-solid:mobile-screen-button"
+        title="Fully Responsive"
+        description="Every component looks great on mobile, tablet, and desktop devices."
+        link={{href: "#"}}
+      />
+      <FeatureCard
+        icon="fa6-solid:universal-access"
+        title="Accessible"
+        description="Built with accessibility in mind, following WCAG guidelines."
+      />
+      <FeatureCard
+        icon="fa6-solid:bolt"
+        title="Easy to Use"
+        description="Simple props and clear documentation make integration a breeze."
+      />
+      <FeatureCard
+        icon="fa6-solid:sliders"
+        title="Customizable"
+        description="Easily adapt colors, fonts, and spacing to match your brand."
+      />
+    </FeatureGrid>
+
+    <!-- 2-Column Feature Grid Example -->
+    <section class="py-16 bg-white">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <h3 class="text-2xl font-bold">2-Column Layout</h3>
+        <p class="text-neutral-600">Set <code class="bg-neutral-100 px-2 py-1 rounded text-sm">columns={2}</code></p>
+      </div>
+      <FeatureGrid columns={2} centered={false}>
+        <FeatureCard
+          icon="fa6-solid:icons"
+          title="Font Awesome Icons"
+          description="Access to 200,000+ professional icons from Font Awesome and other icon sets."
+        />
+        <FeatureCard
+          icon="fa6-solid:lightbulb"
+          title="Easy Integration"
+          description="Simple icon name syntax makes it quick to find and use the perfect icon."
+        />
+      </FeatureGrid>
+    </section>
+
+    <!-- CTA Sections -->
+    <CTASimple
+      title="Ready to Get Started?"
+      subtitle="Join thousands of satisfied customers building better websites"
+      primaryCta={{label: "Start Free Trial", href: "#"}}
+      secondaryCta={{label: "View Pricing", href: "#"}}
+    />
+
+    <section class="py-8 bg-neutral-100">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h3 class="text-xl font-semibold mb-2">CTASimple - Light Variant</h3>
+        <p class="text-sm text-neutral-600">Set <code class="bg-white px-2 py-1 rounded">darkMode={false}</code></p>
+      </div>
+    </section>
+
+    <CTASimple
+      title="Light Background CTA"
+      subtitle="Perfect for alternating sections"
+      primaryCta={{label: "Learn More", href: "#"}}
+      backgroundColor="bg-neutral-100"
+      darkMode={false}
+    />
+
+    <CTASplit
+      title="Split CTA with Image"
+      content="This CTA variant includes an image for more visual impact. Great for product showcases or feature highlights."
+      cta={{label: "Explore Features", href: "#"}}
+      imageSrc="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop"
+      imageAlt="Analytics dashboard"
+      imageRight={true}
+    />
+
+    <!-- Contact Form -->
+    <section class="bg-neutral-50">
+      <ContactForm
+        title="Get In Touch"
+        subtitle="We'd love to hear from you. Fill out the form below."
+      />
+    </section>
+
+    <!-- Component Reference -->
+    <section class="py-16 bg-white">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold mb-8">Component Quick Reference</h2>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Navigation -->
+          <div class="border border-neutral-200 rounded-lg p-6">
+            <h3 class="font-bold text-lg mb-2">Navigation</h3>
+            <p class="text-sm text-neutral-600 mb-3">Sticky header with mobile menu</p>
+            <code class="text-xs bg-neutral-100 block p-2 rounded overflow-x-auto">
+              &lt;Navigation /&gt;
+            </code>
+          </div>
+
+          <!-- Heroes -->
+          <div class="border border-neutral-200 rounded-lg p-6">
+            <h3 class="font-bold text-lg mb-2">Hero Components</h3>
+            <p class="text-sm text-neutral-600 mb-3">3 variants: Minimal, Bold, Video</p>
+            <code class="text-xs bg-neutral-100 block p-2 rounded overflow-x-auto">
+              &lt;HeroMinimal title="..." /&gt;
+            </code>
+          </div>
+
+          <!-- Split -->
+          <div class="border border-neutral-200 rounded-lg p-6">
+            <h3 class="font-bold text-lg mb-2">SplitSection</h3>
+            <p class="text-sm text-neutral-600 mb-3">Content + image layout</p>
+            <code class="text-xs bg-neutral-100 block p-2 rounded overflow-x-auto">
+              &lt;SplitSection imageRight /&gt;
+            </code>
+          </div>
+
+          <!-- Features -->
+          <div class="border border-neutral-200 rounded-lg p-6">
+            <h3 class="font-bold text-lg mb-2">FeatureGrid</h3>
+            <p class="text-sm text-neutral-600 mb-3">Grid layout container</p>
+            <code class="text-xs bg-neutral-100 block p-2 rounded overflow-x-auto">
+              &lt;FeatureGrid columns={3} /&gt;
+            </code>
+          </div>
+
+          <div class="border border-neutral-200 rounded-lg p-6">
+            <h3 class="font-bold text-lg mb-2">FeatureCard</h3>
+            <p class="text-sm text-neutral-600 mb-3">Individual feature card</p>
+            <code class="text-xs bg-neutral-100 block p-2 rounded overflow-x-auto">
+              &lt;FeatureCard icon="fa6-solid:rocket" /&gt;
+            </code>
+          </div>
+
+          <!-- CTAs -->
+          <div class="border border-neutral-200 rounded-lg p-6">
+            <h3 class="font-bold text-lg mb-2">CTA Components</h3>
+            <p class="text-sm text-neutral-600 mb-3">2 variants: Simple, Split</p>
+            <code class="text-xs bg-neutral-100 block p-2 rounded overflow-x-auto">
+              &lt;CTASimple title="..." /&gt;
+            </code>
+          </div>
+
+          <!-- Form -->
+          <div class="border border-neutral-200 rounded-lg p-6">
+            <h3 class="font-bold text-lg mb-2">ContactForm</h3>
+            <p class="text-sm text-neutral-600 mb-3">Styled contact form</p>
+            <code class="text-xs bg-neutral-100 block p-2 rounded overflow-x-auto">
+              &lt;ContactForm action="..." /&gt;
+            </code>
+          </div>
+
+          <!-- Footer -->
+          <div class="border border-neutral-200 rounded-lg p-6">
+            <h3 class="font-bold text-lg mb-2">Footer</h3>
+            <p class="text-sm text-neutral-600 mb-3">Multi-column footer</p>
+            <code class="text-xs bg-neutral-100 block p-2 rounded overflow-x-auto">
+              &lt;Footer companyName="..." /&gt;
+            </code>
+          </div>
+
+          <!-- Layouts -->
+          <div class="border border-neutral-200 rounded-lg p-6">
+            <h3 class="font-bold text-lg mb-2">Layout Templates</h3>
+            <p class="text-sm text-neutral-600 mb-3">Base, Landing, Inner</p>
+            <code class="text-xs bg-neutral-100 block p-2 rounded overflow-x-auto">
+              &lt;LandingLayout title="..." /&gt;
+            </code>
+          </div>
+        </div>
+
+        <!-- Documentation Links -->
+        <div class="mt-12 bg-primary-50 border border-primary-200 rounded-lg p-8 text-center">
+          <h3 class="text-2xl font-bold mb-4">Need More Information?</h3>
+          <p class="text-neutral-700 mb-6">
+            Check out the comprehensive documentation in the <code class="bg-white px-2 py-1 rounded">/specs</code> folder
+          </p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="/specs/component-library-spec.md" class="text-primary-600 hover:text-primary-700 font-medium">
+              Component Spec →
+            </a>
+            <a href="/specs/design-system-spec.md" class="text-primary-600 hover:text-primary-700 font-medium">
+              Design System →
+            </a>
+            <a href="/specs/usage-guide.md" class="text-primary-600 hover:text-primary-700 font-medium">
+              Usage Guide →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer Demo -->
+  <Footer />
+</BaseLayout>

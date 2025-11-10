@@ -1,0 +1,97 @@
+---
+/**
+ * Homepage - Example Landing Page
+ *
+ * This is a sample homepage demonstrating how to use the component library.
+ * Customize this file for your actual projects.
+ */
+
+import LandingLayout from '../layouts/LandingLayout.astro';
+import HeroBold from '../components/library/HeroBold.astro';
+import SplitSection from '../components/library/SplitSection.astro';
+import FeatureGrid from '../components/library/FeatureGrid.astro';
+import FeatureCard from '../components/library/FeatureCard.astro';
+import CTASimple from '../components/library/CTASimple.astro';
+---
+
+<LandingLayout
+  title="Home"
+  description="A modern, accessible website built with our reusable component library. Get 11 production-ready Astro components with Tailwind CSS for faster website development."
+  ogImage="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=630&fit=crop"
+>
+  <!-- Hero Section -->
+  <HeroBold
+    headline="Build Amazing Websites <span class='highlight'>Faster</span>"
+    subtext="A comprehensive Astro component library with everything you need to create beautiful, accessible websites for your clients"
+    cta={{label: "View Components", href: "/components-demo"}}
+    secondaryCta={{label: "Read Docs", href: "/specs/usage-guide.md"}}
+    gradientBackground={true}
+  />
+
+  <!-- About Section -->
+  <SplitSection
+    title="Everything You Need, Ready to Go"
+    content="<p class='mb-4'>This component library includes 11 production-ready components, 3 layout templates, and a fully customizable design system.</p><p class='mb-4'>Perfect for agencies and developers who want to ship client websites faster without sacrificing quality or accessibility.</p><p>Every component is responsive, accessible, and built with TypeScript for maximum reliability.</p>"
+    imageSrc="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop"
+    imageAlt="Team collaboration"
+    cta={{label: "See Components", href: "/components-demo"}}
+    imageRight={false}
+    backgroundColor="bg-white"
+  />
+
+  <!-- Features -->
+  <FeatureGrid
+    title="Why Choose This Library?"
+    subtitle="Everything you need to build modern, professional websites"
+    columns={3}
+  >
+    <FeatureCard
+      icon="fa6-solid:rocket"
+      title="Production Ready"
+      description="11 fully-featured components ready to use in your projects right away."
+    />
+    <FeatureCard
+      icon="fa6-solid:palette"
+      title="Easy Customization"
+      description="Change colors, fonts, and spacing per project with CSS variables."
+    />
+    <FeatureCard
+      icon="fa6-solid:mobile-screen-button"
+      title="Fully Responsive"
+      description="Mobile-first design that looks great on all devices and screen sizes."
+    />
+    <FeatureCard
+      icon="fa6-solid:universal-access"
+      title="Accessible"
+      description="Built with semantic HTML, ARIA labels, and WCAG AA compliance in mind."
+    />
+    <FeatureCard
+      icon="fa6-solid:book"
+      title="Well Documented"
+      description="Comprehensive specs, usage guides, and examples for every component."
+    />
+    <FeatureCard
+      icon="fa6-solid:bolt"
+      title="Fast Performance"
+      description="Optimized with Astro's static site generation for lightning-fast load times."
+    />
+  </FeatureGrid>
+
+  <!-- Technology Section -->
+  <SplitSection
+    title="Built with Modern Tools"
+    content="<p class='mb-4'><strong>Astro</strong> - The modern static site generator that delivers zero JavaScript by default</p><p class='mb-4'><strong>Tailwind CSS v4</strong> - Utility-first CSS with our custom design system</p><p class='mb-4'><strong>TypeScript</strong> - Full type safety for reliable, maintainable code</p><p>All components work seamlessly together and can be customized to match any brand.</p>"
+    imageSrc="https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&h=600&fit=crop"
+    imageAlt="Development workspace"
+    imageRight={true}
+    backgroundColor="bg-neutral-50"
+  />
+
+  <!-- CTA Section -->
+  <CTASimple
+    title="Ready to Build Something Amazing?"
+    subtitle="Start exploring the component library and see how easy it is to create beautiful websites"
+    primaryCta={{label: "View Component Demo", href: "/components-demo"}}
+    secondaryCta={{label: "Read Documentation", href: "/specs/usage-guide.md"}}
+  />
+</LandingLayout>

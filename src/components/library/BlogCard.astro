@@ -1,0 +1,110 @@
+---
+/**
+ * Blog Card Component
+ *
+ * Displays a blog post preview card with featured image,
+ * category, title, excerpt, author, and date.
+ *
+ * Props:
+ * @param {string} title - Post title
+ * @param {string} excerpt - Post excerpt/description
+ * @param {string} featuredImage - Card image URL
+ * @param {string} slug - Post URL slug (e.g., "my-post" for /blog/my-post)
+ * @param {string} category - Post category
+ * @param {string} author - Author name
+ * @param {string} authorImage - Author avatar URL (optional)
+ * @param {string} date - Publication date (formatted string)
+ * @param {number} readingTime - Estimated reading time in minutes (optional)
+ */
+
+import { Image } from 'astro:assets';
+
+export interface Props {
+  title: string;
+  excerpt: string;
+  featuredImage: string;
+  slug: string;
+  category: string;
+  author: string;
+  authorImage?: string;
+  date: string;
+  readingTime?: number;
+}
+
+const {
+  title,
+  excerpt,
+  featuredImage,
+  slug,
+  category,
+  author,
+  authorImage,
+  date,
+  readingTime,
+} = Astro.props;
+
+const postUrl = `/blog/${slug}`;
+---
+
+<article class="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-neutral-200 hover:border-primary-400">
+  <!-- Featured Image -->
+  <a href={postUrl} class="block relative overflow-hidden aspect-[16/9]">
+    <Image
+      src={featuredImage}
+      alt={title}
+      width={800}
+      height={450}
+      format="webp"
+      quality={85}
+      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      loading="lazy"
+    />
+  </a>
+
+  <!-- Card Content -->
+  <div class="p-6">
+    <!-- Title -->
+    <h3 class="text-xl md:text-2xl font-bold text-neutral-900 mb-3 line-clamp-2">
+      <a href={postUrl} class="hover:text-primary-600 transition-colors">
+        {title}
+      </a>
+    </h3>
+
+    <!-- Excerpt -->
+    <p class="text-neutral-600 mb-4 line-clamp-3 leading-relaxed">
+      {excerpt}
+    </p>
+
+    <!-- Meta Info -->
+    <div class="flex items-center justify-between pt-4 border-t border-neutral-200">
+      <!-- Author & Date -->
+      <div class="flex items-center gap-3">
+        {authorImage ? (
+          <img
+            src={authorImage}
+            alt={author}
+            class="w-10 h-10 rounded-full object-cover"
+          />
+        ) : (
+          <div class="w-10 h-10 rounded-full bg-primary-600 flex items-center justify-center text-white font-semibold text-sm">
+            {author.charAt(0).toUpperCase()}
+          </div>
+        )}
+        <div class="text-sm">
+          <p class="font-medium text-neutral-900">{author}</p>
+          <p class="text-neutral-500">{date}</p>
+        </div>
+      </div>
+
+      <!-- Reading Time -->
+      {readingTime && (
+        <div class="flex items-center gap-1.5 text-neutral-500 text-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>{readingTime} min</span>
+        </div>
+      )}
+    </div>
+  </div>
+</article>

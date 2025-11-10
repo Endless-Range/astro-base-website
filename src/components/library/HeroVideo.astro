@@ -1,0 +1,116 @@
+---
+/**
+ * Video Background Hero Section
+ *
+ * A dramatic hero section with video background and overlay.
+ * Video can be a local file or external URL.
+ *
+ * Props:
+ * @param {string} videoSrc - Path to video file (mp4, webm)
+ * @param {string} posterImage - Fallback image while video loads
+ * @param {string} title - Main headline text
+ * @param {string} subtitle - Optional subtext
+ * @param {Object} cta - Call-to-action button {label: string, href: string}
+ * @param {Object} secondaryCta - Optional secondary CTA {label: string, href: string}
+ * @param {string} overlayOpacity - Overlay darkness: 'light', 'medium', 'dark' (default: 'medium')
+ */
+
+export interface Props {
+  videoSrc: string;
+  posterImage?: string;
+  title: string;
+  subtitle?: string;
+  cta?: { label: string; href: string };
+  secondaryCta?: { label: string; href: string };
+  overlayOpacity?: 'light' | 'medium' | 'dark';
+}
+
+const {
+  videoSrc,
+  posterImage,
+  title,
+  subtitle,
+  cta,
+  secondaryCta,
+  overlayOpacity = 'medium',
+} = Astro.props;
+
+const overlayClasses = {
+  light: 'bg-black/30',
+  medium: 'bg-black/50',
+  dark: 'bg-black/70',
+};
+---
+
+<section class="relative h-screen min-h-[600px] overflow-hidden">
+  <!-- Video Background -->
+  <video
+    autoplay
+    muted
+    loop
+    playsinline
+    poster={posterImage}
+    class="absolute inset-0 w-full h-full object-cover"
+  >
+    <source src={videoSrc} type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Overlay -->
+  <div class={`absolute inset-0 ${overlayClasses[overlayOpacity]}`}></div>
+
+  <!-- Content -->
+  <div class="relative h-full flex items-center justify-center">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-6xl mx-auto text-center text-white">
+        <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 drop-shadow-lg">
+          {title}
+        </h1>
+
+        {subtitle && (
+          <p class="text-xl md:text-2xl mb-10 drop-shadow-lg opacity-90">
+            {subtitle}
+          </p>
+        )}
+
+        {(cta || secondaryCta) && (
+          <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            {cta && (
+              <a
+                href={cta.href}
+                class="w-full sm:w-auto bg-white text-neutral-900 hover:bg-neutral-100 px-10 py-4 rounded-lg font-semibold text-lg transition-all hover:scale-105 shadow-xl text-center"
+              >
+                {cta.label}
+              </a>
+            )}
+            {secondaryCta && (
+              <a
+                href={secondaryCta.href}
+                class="w-full sm:w-auto border-2 border-white text-white hover:bg-white hover:text-neutral-900 px-10 py-4 rounded-lg font-semibold text-lg transition-all text-center"
+              >
+                {secondaryCta.label}
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll Indicator (optional) -->
+  <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+    <svg
+      class="w-6 h-6 text-white opacity-75"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M19 14l-7 7m0 0l-7-7m7 7V3"
+      ></path>
+    </svg>
+  </div>
+</section>

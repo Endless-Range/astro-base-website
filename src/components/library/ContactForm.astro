@@ -1,0 +1,204 @@
+---
+/**
+ * Contact Form Component
+ *
+ * A styled contact form with Resend email integration via API endpoint.
+ * Includes client-side validation and AJAX submission for better UX.
+ *
+ * Props:
+ * @param {string} title - Form heading (optional)
+ * @param {string} subtitle - Form subheading (optional)
+ * @param {string} action - Form action URL (default: '/api/contact')
+ * @param {string} method - Form method (default: 'POST')
+ * @param {boolean} includeMessage - Include message textarea (default: true)
+ * @param {boolean} includePhone - Include phone field (default: true)
+ * @param {string} submitLabel - Submit button text (default: 'Send Message')
+ */
+
+export interface Props {
+  title?: string;
+  subtitle?: string;
+  action?: string;
+  method?: string;
+  includeMessage?: boolean;
+  includePhone?: boolean;
+  submitLabel?: string;
+}
+
+const {
+  title = 'Get in Touch',
+  subtitle = "We'd love to hear from you. Send us a message and we'll respond as soon as possible.",
+  action = '/api/contact',
+  method = 'POST',
+  includeMessage = true,
+  includePhone = true,
+  submitLabel = 'Send Message',
+} = Astro.props;
+---
+
+<section class="py-16 md:py-24 bg-white">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-5xl mx-auto">
+      {(title || subtitle) && (
+        <div class="text-center mb-12">
+          {title && (
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 mb-4">
+              {title}
+            </h2>
+          )}
+          {subtitle && (
+            <p class="text-lg text-neutral-600">
+              {subtitle}
+            </p>
+          )}
+        </div>
+      )}
+
+      <form action={action} method={method} class="space-y-6">
+        <!-- Name Field -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-neutral-700 mb-2">
+            Name <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+            placeholder="Your name"
+          />
+        </div>
+
+        <!-- Email Field -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-neutral-700 mb-2">
+            Email <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+            placeholder="your.email@example.com"
+          />
+        </div>
+
+        <!-- Phone Field (Optional) -->
+        {includePhone && (
+          <div>
+            <label for="phone" class="block text-sm font-medium text-neutral-700 mb-2">
+              Phone
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              placeholder="(555) 123-4567"
+            />
+          </div>
+        )}
+
+        <!-- Message Field (Optional) -->
+        {includeMessage && (
+          <div>
+            <label for="message" class="block text-sm font-medium text-neutral-700 mb-2">
+              Message <span class="text-red-500">*</span>
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              rows="5"
+              class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors resize-y"
+              placeholder="Tell us about your project..."
+            ></textarea>
+          </div>
+        )}
+
+        <!-- Submit Button -->
+        <div>
+          <button
+            type="submit"
+            id="submit-btn"
+            class="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-neutral-400 disabled:cursor-not-allowed text-white px-8 py-3.5 rounded-lg font-semibold transition-colors flex items-center justify-center"
+          >
+            <span id="submit-text">{submitLabel}</span>
+            <svg id="submit-spinner" class="hidden animate-spin ml-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div id="form-message" class="hidden p-4 rounded-lg text-center font-medium"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Client-side form handling with AJAX submission
+  const form = document.querySelector('form');
+  const messageDiv = document.getElementById('form-message');
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+  const submitText = document.getElementById('submit-text');
+  const submitSpinner = document.getElementById('submit-spinner');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Disable button and show loading state
+    if (submitBtn) submitBtn.disabled = true;
+    if (submitSpinner) submitSpinner.classList.remove('hidden');
+    if (submitText) submitText.textContent = 'Sending...';
+
+    // Hide any previous messages
+    messageDiv?.classList.add('hidden');
+
+    const formData = new FormData(form as HTMLFormElement);
+
+    try {
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        // Show success message
+        if (messageDiv) {
+          messageDiv.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'border-red-300');
+          messageDiv.classList.add('bg-green-100', 'text-green-700', 'border', 'border-green-300');
+          messageDiv.textContent = result.message || 'Thank you! Your message has been sent successfully.';
+        }
+
+        // Reset form
+        form.reset();
+      } else {
+        // Show error message
+        if (messageDiv) {
+          messageDiv.classList.remove('hidden', 'bg-green-100', 'text-green-700', 'border-green-300');
+          messageDiv.classList.add('bg-red-100', 'text-red-700', 'border', 'border-red-300');
+          messageDiv.textContent = result.error || 'Oops! Something went wrong. Please try again.';
+        }
+      }
+    } catch (error) {
+      // Show network error message
+      if (messageDiv) {
+        messageDiv.classList.remove('hidden', 'bg-green-100', 'text-green-700', 'border-green-300');
+        messageDiv.classList.add('bg-red-100', 'text-red-700', 'border', 'border-red-300');
+        messageDiv.textContent = 'Network error. Please check your connection and try again.';
+      }
+    } finally {
+      // Re-enable button and hide loading state
+      if (submitBtn) submitBtn.disabled = false;
+      if (submitSpinner) submitSpinner.classList.add('hidden');
+      if (submitText) submitText.textContent = 'Send Message';
+    }
+  });
+</script>

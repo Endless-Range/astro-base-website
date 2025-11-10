@@ -1,0 +1,242 @@
+---
+/**
+ * Contact Page
+ *
+ * A full-featured contact page with form, contact information, and map section.
+ */
+
+import { Icon } from 'astro-icon/components';
+import InnerLayout from '../layouts/InnerLayout.astro';
+import Navigation from '../components/library/Navigation.astro';
+import ContactForm from '../components/library/ContactForm.astro';
+import Footer from '../components/library/Footer.astro';
+
+const navLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Components', href: '/components-demo' },
+  { label: 'Contact', href: '/contact' },
+];
+
+const footerColumns = [
+  {
+    title: 'Company',
+    links: [
+      { label: 'About', href: '/about' },
+      { label: 'Services', href: '/services' },
+      { label: 'Contact', href: '/contact' },
+    ],
+  },
+  {
+    title: 'Resources',
+    links: [
+      { label: 'Blog', href: '/blog' },
+      { label: 'Documentation', href: '/docs' },
+      { label: 'Support', href: '/support' },
+    ],
+  },
+];
+
+const socialLinks = [
+  { platform: 'twitter' as const, url: 'https://twitter.com/yoursite' },
+  { platform: 'linkedin' as const, url: 'https://linkedin.com/company/yoursite' },
+  { platform: 'github' as const, url: 'https://github.com/yoursite' },
+];
+
+const contactInfo = [
+  {
+    icon: 'fa6-solid:envelope',
+    title: 'Email',
+    content: 'hello@yourcompany.com',
+    link: 'mailto:hello@yourcompany.com',
+  },
+  {
+    icon: 'fa6-solid:phone',
+    title: 'Phone',
+    content: '+1 (555) 123-4567',
+    link: 'tel:+15551234567',
+  },
+  {
+    icon: 'fa6-solid:location-dot',
+    title: 'Office',
+    content: '123 Business Street, Suite 100\nSan Francisco, CA 94103',
+    link: 'https://maps.google.com/?q=San+Francisco+CA',
+  },
+];
+
+const businessHours = [
+  { day: 'Monday - Friday', hours: '9:00 AM - 6:00 PM' },
+  { day: 'Saturday', hours: '10:00 AM - 4:00 PM' },
+  { day: 'Sunday', hours: 'Closed' },
+];
+---
+
+<InnerLayout
+  title="Contact Us"
+  description="Get in touch with us. We'd love to hear from you and answer any questions you may have."
+  pageTitle="Get In Touch"
+  pageSubtitle="Have a question or want to work together? Send us a message and we'll respond as soon as possible."
+>
+  <Navigation
+    slot="navigation"
+    logoText="Your Brand"
+    navLinks={navLinks}
+    transparent={false}
+  />
+
+  <!-- Contact Information Cards -->
+  <section class="py-12 md:py-16 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
+        {contactInfo.map((info) => (
+          <a
+            href={info.link}
+            class="group p-6 bg-neutral-50 rounded-lg border border-neutral-200 hover:border-primary-400 hover:shadow-lg transition-all duration-300 text-center"
+          >
+            <div class="flex justify-center mb-4">
+              <div class="w-14 h-14 flex items-center justify-center bg-primary-100 rounded-lg text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-colors">
+                <Icon name={info.icon} class="w-7 h-7" />
+              </div>
+            </div>
+            <h3 class="text-lg font-semibold text-neutral-900 mb-2">
+              {info.title}
+            </h3>
+            <p class="text-neutral-600 whitespace-pre-line">
+              {info.content}
+            </p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form Section -->
+  <ContactForm
+    title="Send Us a Message"
+    subtitle="Fill out the form below and we'll get back to you within 24 hours."
+    includePhone={true}
+    includeMessage={true}
+  />
+
+  <!-- Business Hours & Additional Info -->
+  <section class="py-12 md:py-16 bg-neutral-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto">
+        <!-- Business Hours -->
+        <div class="bg-white p-8 rounded-lg border border-neutral-200">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 flex items-center justify-center bg-primary-100 rounded-lg">
+              <Icon name="fa6-solid:clock" class="w-6 h-6 text-primary-600" />
+            </div>
+            <h2 class="text-2xl font-bold text-neutral-900">Business Hours</h2>
+          </div>
+          <div class="space-y-3">
+            {businessHours.map((schedule) => (
+              <div class="flex justify-between items-center py-2 border-b border-neutral-100 last:border-0">
+                <span class="font-medium text-neutral-700">{schedule.day}</span>
+                <span class="text-neutral-600">{schedule.hours}</span>
+              </div>
+            ))}
+          </div>
+          <p class="mt-6 text-sm text-neutral-500">
+            <Icon name="fa6-solid:circle-info" class="inline w-4 h-4 mr-1" />
+            We typically respond to all inquiries within 1 business day.
+          </p>
+        </div>
+
+        <!-- FAQ or Additional Info -->
+        <div class="bg-white p-8 rounded-lg border border-neutral-200">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 flex items-center justify-center bg-secondary-100 rounded-lg">
+              <Icon name="fa6-solid:circle-question" class="w-6 h-6 text-secondary-600" />
+            </div>
+            <h2 class="text-2xl font-bold text-neutral-900">Quick Questions?</h2>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <h3 class="font-semibold text-neutral-900 mb-2">Need immediate assistance?</h3>
+              <p class="text-neutral-600 mb-3">
+                For urgent matters, please call us directly at{' '}
+                <a href="tel:+15551234567" class="text-primary-600 hover:text-primary-700 font-medium">
+                  +1 (555) 123-4567
+                </a>
+              </p>
+            </div>
+            <div>
+              <h3 class="font-semibold text-neutral-900 mb-2">Looking for support?</h3>
+              <p class="text-neutral-600 mb-3">
+                Check out our{' '}
+                <a href="/support" class="text-primary-600 hover:text-primary-700 font-medium">
+                  Help Center
+                </a>{' '}
+                for answers to common questions.
+              </p>
+            </div>
+            <div>
+              <h3 class="font-semibold text-neutral-900 mb-2">Want to work with us?</h3>
+              <p class="text-neutral-600">
+                Learn more about our services and how we can help your business grow.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Map Section (Optional) -->
+  <section class="py-12 md:py-16 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
+            Visit Our Office
+          </h2>
+          <p class="text-lg text-neutral-600">
+            We'd love to meet you in person. Stop by during business hours!
+          </p>
+        </div>
+
+        <!-- Placeholder for Map - Replace with actual Google Maps embed -->
+        <div class="relative rounded-lg overflow-hidden border border-neutral-200 bg-neutral-100 aspect-[16/9] flex items-center justify-center">
+          <div class="text-center p-8">
+            <Icon name="fa6-solid:map-location-dot" class="w-16 h-16 text-neutral-400 mx-auto mb-4" />
+            <p class="text-neutral-600 mb-4">
+              Map placeholder - Replace with Google Maps embed
+            </p>
+            <a
+              href="https://maps.google.com/?q=San+Francisco+CA"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+            >
+              <Icon name="fa6-solid:location-dot" class="w-5 h-5" />
+              Open in Google Maps
+            </a>
+          </div>
+
+          <!-- Example Google Maps Embed (uncomment and add your location):
+          <iframe
+            src="https://www.google.com/maps/embed?pb=YOUR_EMBED_CODE"
+            width="100%"
+            height="100%"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            class="absolute inset-0"
+          ></iframe>
+          -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer
+    slot="footer"
+    companyName="Your Company"
+    tagline="Building amazing websites"
+    columns={footerColumns}
+    socialLinks={socialLinks}
+  />
+</InnerLayout>

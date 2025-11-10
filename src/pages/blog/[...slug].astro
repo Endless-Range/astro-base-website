@@ -1,0 +1,42 @@
+---
+/**
+ * Dynamic Blog Post Page
+ *
+ * Renders individual blog posts from the content collection.
+ * Uses Astro's content collections for markdown support.
+ */
+
+import { getCollection } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+
+export async function getStaticPaths() {
+  const blogEntries = await getCollection('blog');
+  return blogEntries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+// Format the date
+const formattedDate = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+}).format(entry.data.date);
+---
+
+<BlogLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  featuredImage={entry.data.featuredImage}
+  author={entry.data.author}
+  authorImage={entry.data.authorImage}
+  date={formattedDate}
+  category={entry.data.category}
+  readingTime={entry.data.readingTime}
+>
+  <Content />
+</BlogLayout>

@@ -1,0 +1,75 @@
+---
+/**
+ * Split CTA Section
+ *
+ * A two-column CTA layout with image and content.
+ * More visual and engaging than simple CTA.
+ *
+ * Props:
+ * @param {string} title - CTA headline
+ * @param {string} content - Supporting text/description
+ * @param {Object} cta - Call-to-action button {label: string, href: string}
+ * @param {string} imageSrc - Path to image
+ * @param {string} imageAlt - Alt text for image
+ * @param {boolean} imageRight - Image on right side (default: true)
+ * @param {string} backgroundColor - Background color class (default: 'bg-neutral-900')
+ */
+
+export interface Props {
+  title: string;
+  content: string;
+  cta: { label: string; href: string };
+  imageSrc: string;
+  imageAlt: string;
+  imageRight?: boolean;
+  backgroundColor?: string;
+}
+
+const {
+  title,
+  content,
+  cta,
+  imageSrc,
+  imageAlt,
+  imageRight = true,
+  backgroundColor = 'bg-neutral-900',
+} = Astro.props;
+---
+
+<section class={`py-16 md:py-24 ${backgroundColor}`}>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div
+      class={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center ${
+        imageRight ? '' : 'lg:grid-flow-dense'
+      }`}
+    >
+      <!-- Content Column -->
+      <div class={`${imageRight ? '' : 'lg:col-start-2'}`}>
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+          {title}
+        </h2>
+
+        <p class="text-lg text-white/90 mb-8 leading-relaxed">
+          {content}
+        </p>
+
+        <a
+          href={cta.href}
+          class="inline-block bg-white text-neutral-900 hover:bg-neutral-100 px-8 py-3.5 rounded-lg font-semibold transition-colors"
+        >
+          {cta.label}
+        </a>
+      </div>
+
+      <!-- Image Column -->
+      <div class={`${imageRight ? '' : 'lg:col-start-1'}`}>
+        <img
+          src={imageSrc}
+          alt={imageAlt}
+          class="w-full h-auto rounded-lg shadow-2xl object-cover"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </div>
+</section>

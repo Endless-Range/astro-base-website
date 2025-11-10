@@ -1,0 +1,77 @@
+---
+/**
+ * Feature Card Component
+ *
+ * A card component to showcase individual features or services.
+ * Uses Iconify icons (Font Awesome, Material Design, etc.)
+ *
+ * Props:
+ * @param {string} icon - Iconify icon name (e.g., 'fa6-solid:rocket', 'mdi:check-circle')
+ * @param {string} title - Feature/service title
+ * @param {string} description - Brief description text
+ * @param {Object} link - Optional link {href: string, label?: string}
+ * @param {boolean} centered - Center align content (default: true)
+ */
+
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+  icon?: string;
+  title: string;
+  description: string;
+  link?: { href: string; label?: string };
+  centered?: boolean;
+}
+
+const {
+  icon,
+  title,
+  description,
+  link,
+  centered = true,
+} = Astro.props;
+---
+
+<div
+  class={`group p-6 md:p-8 bg-white rounded-lg border border-neutral-200 hover:border-primary-400 hover:shadow-lg transition-all duration-300 ${
+    centered ? 'text-center' : ''
+  }`}
+>
+  {icon && (
+    <div class={`mb-4 flex ${centered ? 'justify-center' : ''}`}>
+      <div class="w-14 h-14 flex items-center justify-center bg-primary-100 rounded-lg text-primary-600">
+        <Icon name={icon} class="w-7 h-7" />
+      </div>
+    </div>
+  )}
+
+  <h3 class="text-xl md:text-2xl font-bold text-neutral-900 mb-3">
+    {title}
+  </h3>
+
+  <p class="text-neutral-600 mb-4 leading-relaxed">
+    {description}
+  </p>
+
+  {link && (
+    <a
+      href={link.href}
+      class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium group-hover:translate-x-1 transition-transform"
+    >
+      {link.label || 'Learn more'}
+      <svg
+        class="w-4 h-4 ml-2"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 5l7 7-7 7"
+        ></path>
+      </svg>
+    </a>
+  )}
+</div>

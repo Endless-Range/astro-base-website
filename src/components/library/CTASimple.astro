@@ -1,0 +1,76 @@
+---
+/**
+ * Simple CTA Section
+ *
+ * A centered call-to-action block for driving conversions.
+ * Clean and focused design.
+ *
+ * Props:
+ * @param {string} title - CTA headline
+ * @param {string} subtitle - Supporting text (optional)
+ * @param {Object} primaryCta - Primary button {label: string, href: string}
+ * @param {Object} secondaryCta - Optional secondary button {label: string, href: string}
+ * @param {string} backgroundColor - Background color class (default: 'bg-primary-600')
+ * @param {boolean} darkMode - Use light text on dark background (default: true)
+ */
+
+export interface Props {
+  title: string;
+  subtitle?: string;
+  primaryCta: { label: string; href: string };
+  secondaryCta?: { label: string; href: string };
+  backgroundColor?: string;
+  darkMode?: boolean;
+}
+
+const {
+  title,
+  subtitle,
+  primaryCta,
+  secondaryCta,
+  backgroundColor = 'bg-primary-600',
+  darkMode = true,
+} = Astro.props;
+
+const textColor = darkMode ? 'text-white' : 'text-neutral-900';
+const buttonPrimaryClass = darkMode
+  ? 'bg-white text-primary-600 hover:bg-neutral-100'
+  : 'bg-primary-600 text-white hover:bg-primary-700';
+const buttonSecondaryClass = darkMode
+  ? 'border-2 border-white text-white hover:bg-white hover:text-primary-600'
+  : 'border-2 border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white';
+---
+
+<section class={`py-16 md:py-20 ${backgroundColor}`}>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-5xl mx-auto text-center">
+      <h2 class={`text-3xl md:text-4xl lg:text-5xl font-bold mb-4 ${textColor}`}>
+        {title}
+      </h2>
+
+      {subtitle && (
+        <p class={`text-lg md:text-xl mb-8 ${darkMode ? 'text-white/90' : 'text-neutral-600'}`}>
+          {subtitle}
+        </p>
+      )}
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <a
+          href={primaryCta.href}
+          class={`w-full sm:w-auto px-8 py-3.5 rounded-lg font-semibold transition-all text-center ${buttonPrimaryClass}`}
+        >
+          {primaryCta.label}
+        </a>
+
+        {secondaryCta && (
+          <a
+            href={secondaryCta.href}
+            class={`w-full sm:w-auto px-8 py-3.5 rounded-lg font-semibold transition-all text-center ${buttonSecondaryClass}`}
+          >
+            {secondaryCta.label}
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+</section>

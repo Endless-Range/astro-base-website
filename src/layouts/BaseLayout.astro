@@ -1,0 +1,137 @@
+---
+/**
+ * Base Layout
+ *
+ * The foundation layout for all pages.
+ * Includes SEO meta tags, OpenGraph support, and global styles.
+ *
+ * Props:
+ * @param {string} title - Page title (appears in browser tab)
+ * @param {string} description - Meta description for SEO
+ * @param {string} ogImage - Open Graph image URL (for social sharing)
+ * @param {string} canonicalUrl - Canonical URL for SEO
+ * @param {boolean} includeNav - Include navigation header (default: true)
+ * @param {boolean} includeFooter - Include footer (default: true)
+ */
+
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  includeNav?: boolean;
+  includeFooter?: boolean;
+  ogType?: 'website' | 'article';
+  articlePublishedTime?: string;
+  articleAuthor?: string;
+}
+
+const {
+  title,
+  description = 'A modern, accessible website built with Astro and Tailwind CSS.',
+  ogImage = '/og-image.jpg',
+  canonicalUrl,
+  includeNav = true,
+  includeFooter = true,
+  ogType = 'website',
+  articlePublishedTime,
+  articleAuthor,
+} = Astro.props;
+
+const siteName = 'Your Site Name';
+const siteUrl = Astro.site || 'https://yoursite.com';
+const fullTitle = title ? `${title} | ${siteName}` : siteName;
+const canonical = canonicalUrl || new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : new URL(ogImage, siteUrl).href;
+
+// Generate JSON-LD structured data for articles
+const jsonLd = ogType === 'article' && articlePublishedTime ? {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": title,
+  "description": description,
+  "image": ogImageUrl,
+  "datePublished": articlePublishedTime,
+  "author": {
+    "@type": "Person",
+    "name": articleAuthor || "Anonymous"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": siteName,
+    "logo": {
+      "@type": "ImageObject",
+      "url": new URL('/logo.png', siteUrl).href
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": canonical
+  }
+} : null;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta Tags -->
+    <title>{fullTitle}</title>
+    <meta name="title" content={fullTitle} />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content={siteName} />
+    {articlePublishedTime && <meta property="article:published_time" content={articlePublishedTime} />}
+    {articleAuthor && <meta property="article:author" content={articleAuthor} />}
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonical} />
+    <meta property="twitter:title" content={fullTitle} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={ogImageUrl} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Fonts - Optional: Add Google Fonts or custom fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Structured Data (JSON-LD) -->
+    {jsonLd && (
+      <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    )}
+  </head>
+  <body>
+    {includeNav && (
+      <slot name="navigation" />
+    )}
+
+    <main>
+      <slot />
+    </main>
+
+    {includeFooter && (
+      <slot name="footer" />
+    )}
+  </body>
+</html>

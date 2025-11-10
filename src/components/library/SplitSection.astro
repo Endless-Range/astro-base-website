@@ -1,0 +1,78 @@
+---
+/**
+ * Split Section Component
+ *
+ * A flexible two-column layout component for content and images.
+ * Responsive - stacks vertically on mobile devices.
+ *
+ * Props:
+ * @param {string} title - Section headline
+ * @param {string} content - Main text content (supports HTML)
+ * @param {string} imageSrc - Path to image
+ * @param {string} imageAlt - Alt text for image
+ * @param {Object} cta - Optional call-to-action {label: string, href: string}
+ * @param {boolean} imageRight - Image on right side (default: false, image on left)
+ * @param {string} backgroundColor - Background color class (default: 'bg-white')
+ */
+
+export interface Props {
+  title: string;
+  content: string;
+  imageSrc: string;
+  imageAlt: string;
+  cta?: { label: string; href: string };
+  imageRight?: boolean;
+  backgroundColor?: string;
+}
+
+const {
+  title,
+  content,
+  imageSrc,
+  imageAlt,
+  cta,
+  imageRight = false,
+  backgroundColor = 'bg-white',
+} = Astro.props;
+---
+
+<section class={`py-16 md:py-24 ${backgroundColor}`}>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div
+      class={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center ${
+        imageRight ? 'lg:grid-flow-dense' : ''
+      }`}
+    >
+      <!-- Content Column -->
+      <div class={imageRight ? 'lg:col-start-1' : ''}>
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 mb-6">
+          {title}
+        </h2>
+
+        <div
+          class="text-lg text-neutral-600 mb-8 prose prose-lg max-w-none"
+          set:html={content}
+        />
+
+        {cta && (
+          <a
+            href={cta.href}
+            class="inline-block bg-primary-600 hover:bg-primary-700 text-white px-8 py-3.5 rounded-lg font-medium transition-colors"
+          >
+            {cta.label}
+          </a>
+        )}
+      </div>
+
+      <!-- Image Column -->
+      <div class={`${imageRight ? 'lg:col-start-2' : ''} order-first lg:order-none`}>
+        <img
+          src={imageSrc}
+          alt={imageAlt}
+          class="w-full h-auto rounded-lg shadow-lg object-cover"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </div>
+</section>

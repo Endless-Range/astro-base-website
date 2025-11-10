@@ -1,0 +1,172 @@
+---
+/**
+ * Navigation Component
+ *
+ * A responsive navigation header with the following features:
+ * - Sticky positioning with scroll-based background transition
+ * - Mobile hamburger menu with smooth animations
+ * - Customizable logo, nav links, and CTA button
+ *
+ * Props:
+ * @param {string} logoText - Text or path to logo image
+ * @param {boolean} logoIsImage - Whether the logo is an image (default: false)
+ * @param {Array<{label: string, href: string}>} navLinks - Navigation menu items
+ * @param {Object} cta - Call-to-action button {label: string, href: string}
+ * @param {boolean} transparent - Start with transparent background (default: true)
+ */
+
+export interface Props {
+  logoText?: string;
+  logoIsImage?: boolean;
+  navLinks?: Array<{ label: string; href: string }>;
+  cta?: { label: string; href: string };
+  transparent?: boolean;
+}
+
+const {
+  logoText = "Logo",
+  logoIsImage = false,
+  navLinks = [
+    { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
+    { label: "Services", href: "/services" },
+    { label: "Blog", href: "/blog" },
+    { label: "Contact", href: "/contact" },
+  ],
+  cta = { label: "Get Started", href: "/get-started" },
+  transparent = true,
+} = Astro.props;
+---
+
+<header
+  id="main-nav"
+  class={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${transparent ? "bg-transparent" : "bg-white shadow-md"}`}
+>
+  <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 md:h-20">
+      <!-- Logo -->
+      <a href="/" class="flex items-center space-x-2 text-xl font-bold text-neutral-900 hover:text-primary-600 transition-colors">
+        {logoIsImage ? (
+          <img src={logoText} alt="Logo" class="h-8 md:h-10" />
+        ) : (
+          <span>{logoText}</span>
+        )}
+      </a>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center space-x-8">
+        {navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="text-neutral-700 hover:text-primary-600 transition-colors font-medium"
+          >
+            {link.label}
+          </a>
+        ))}
+        <a
+          href={cta.href}
+          class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
+        >
+          {cta.label}
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button
+        id="mobile-menu-button"
+        class="md:hidden p-2 rounded-lg text-neutral-700 hover:bg-neutral-100 transition-colors"
+        aria-label="Toggle menu"
+      >
+        <svg
+          id="menu-open-icon"
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          ></path>
+        </svg>
+        <svg
+          id="menu-close-icon"
+          class="w-6 h-6 hidden"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div
+      id="mobile-menu"
+      class="md:hidden hidden overflow-hidden transition-all duration-300"
+    >
+      <div class="py-4 space-y-3">
+        {navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="block px-4 py-2 text-neutral-700 hover:bg-neutral-100 hover:text-primary-600 rounded-lg transition-colors"
+          >
+            {link.label}
+          </a>
+        ))}
+        <a
+          href={cta.href}
+          class="block mx-4 text-center bg-primary-600 hover:bg-primary-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
+        >
+          {cta.label}
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<script>
+  // Scroll effect for navigation background
+  const nav = document.getElementById('main-nav');
+  const wasTransparent = nav?.classList.contains('bg-transparent');
+
+  if (wasTransparent && nav) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        nav.classList.remove('bg-transparent');
+        nav.classList.add('bg-white', 'shadow-md');
+      } else {
+        nav.classList.add('bg-transparent');
+        nav.classList.remove('bg-white', 'shadow-md');
+      }
+    });
+  }
+
+  // Mobile menu toggle
+  const menuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const openIcon = document.getElementById('menu-open-icon');
+  const closeIcon = document.getElementById('menu-close-icon');
+
+  menuButton?.addEventListener('click', () => {
+    const isOpening = mobileMenu?.classList.contains('hidden');
+
+    mobileMenu?.classList.toggle('hidden');
+    openIcon?.classList.toggle('hidden');
+    closeIcon?.classList.toggle('hidden');
+
+    // Ensure nav has solid background when mobile menu is open
+    if (isOpening && nav) {
+      nav.classList.remove('bg-transparent');
+      nav.classList.add('bg-white', 'shadow-md');
+    }
+  });
+</script>
