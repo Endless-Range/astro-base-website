@@ -9,38 +9,12 @@ import { Icon } from 'astro-icon/components';
 import InnerLayout from '../layouts/InnerLayout.astro';
 import Navigation from '../components/library/Navigation.astro';
 import ContactForm from '../components/library/ContactForm.astro';
-import Footer from '../components/library/Footer.astro';
 
 const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
   { label: 'Components', href: '/components-demo' },
   { label: 'Contact', href: '/contact' },
-];
-
-const footerColumns = [
-  {
-    title: 'Company',
-    links: [
-      { label: 'About', href: '/about' },
-      { label: 'Services', href: '/services' },
-      { label: 'Contact', href: '/contact' },
-    ],
-  },
-  {
-    title: 'Resources',
-    links: [
-      { label: 'Blog', href: '/blog' },
-      { label: 'Documentation', href: '/docs' },
-      { label: 'Support', href: '/support' },
-    ],
-  },
-];
-
-const socialLinks = [
-  { platform: 'twitter' as const, url: 'https://twitter.com/yoursite' },
-  { platform: 'linkedin' as const, url: 'https://linkedin.com/company/yoursite' },
-  { platform: 'github' as const, url: 'https://github.com/yoursite' },
 ];
 
 const contactInfo = [
@@ -232,11 +206,4 @@ const businessHours = [
     </div>
   </section>
 
-  <Footer
-    slot="footer"
-    companyName="Your Company"
-    tagline="Building amazing websites"
-    columns={footerColumns}
-    socialLinks={socialLinks}
-  />
 </InnerLayout>

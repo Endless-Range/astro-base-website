@@ -21,6 +21,7 @@ import BaseLayout from './BaseLayout.astro';
 import Navigation from '../components/library/Navigation.astro';
 import Footer from '../components/library/Footer.astro';
 import { Image } from 'astro:assets';
+import { footerConfig } from '../config/footer';
 
 export interface Props {
   title: string;
@@ -189,7 +190,14 @@ const isoDate = dateObj.toISOString();
     </div>
   </article>
 
-  <Footer slot="footer" />
+  <Footer
+    slot="footer"
+    companyName={footerConfig.companyName}
+    tagline={footerConfig.tagline}
+    columns={footerConfig.columns}
+    socialLinks={footerConfig.socialLinks}
+    backgroundColor={footerConfig.backgroundColor}
+  />
 </BaseLayout>
 
 <style is:global>

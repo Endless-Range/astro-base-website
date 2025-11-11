@@ -5,36 +5,20 @@
  * Custom error page shown when a user navigates to a non-existent page.
  */
 
-import BaseLayout from '../layouts/BaseLayout.astro';
+import InnerLayout from '../layouts/InnerLayout.astro';
 import Navigation from '../components/library/Navigation.astro';
-import Footer from '../components/library/Footer.astro';
 
 const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
   { label: 'Components', href: '/components-demo' },
 ];
-
-const footerColumns = [
-  {
-    title: 'Quick Links',
-    links: [
-      { label: 'Home', href: '/' },
-      { label: 'About', href: '/about' },
-      { label: 'Contact', href: '/contact' },
-    ],
-  },
-];
-
-const socialLinks = [
-  { platform: 'twitter' as const, url: 'https://twitter.com/yoursite' },
-  { platform: 'linkedin' as const, url: 'https://linkedin.com/company/yoursite' },
-];
 ---
 
-<BaseLayout
+<InnerLayout
   title="Page Not Found"
   description="The page you are looking for could not be found."
+  containerized={false}
 >
   <Navigation
     slot="navigation"
@@ -143,11 +127,4 @@ const socialLinks = [
     </div>
   </section>
 
-  <Footer
-    slot="footer"
-    companyName="Your Company"
-    tagline="Building amazing websites"
-    columns={footerColumns}
-    socialLinks={socialLinks}
-  />
-</BaseLayout>
+</InnerLayout>

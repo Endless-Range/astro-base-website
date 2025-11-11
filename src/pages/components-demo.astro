@@ -18,6 +18,7 @@ import CTASimple from '../components/library/CTASimple.astro';
 import CTASplit from '../components/library/CTASplit.astro';
 import ContactForm from '../components/library/ContactForm.astro';
 import Footer from '../components/library/Footer.astro';
+import { footerConfig } from '../config/footer';
 ---
 
 <BaseLayout
@@ -323,5 +324,11 @@ import Footer from '../components/library/Footer.astro';
   </div>
 
   <!-- Footer Demo -->
-  <Footer />
+  <Footer
+    companyName={footerConfig.companyName}
+    tagline={footerConfig.tagline}
+    columns={footerConfig.columns}
+    socialLinks={footerConfig.socialLinks}
+    backgroundColor={footerConfig.backgroundColor}
+  />
 </BaseLayout>
