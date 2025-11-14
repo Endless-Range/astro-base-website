@@ -2,14 +2,12 @@
 /**
  * Contact Form Component
  *
- * A styled contact form with Resend email integration via API endpoint.
+ * A styled contact form with Web3Forms integration.
  * Includes client-side validation and AJAX submission for better UX.
  *
  * Props:
  * @param {string} title - Form heading (optional)
  * @param {string} subtitle - Form subheading (optional)
- * @param {string} action - Form action URL (default: '/api/contact')
- * @param {string} method - Form method (default: 'POST')
  * @param {boolean} includeMessage - Include message textarea (default: true)
  * @param {boolean} includePhone - Include phone field (default: true)
  * @param {string} submitLabel - Submit button text (default: 'Send Message')
@@ -18,8 +16,6 @@
 export interface Props {
   title?: string;
   subtitle?: string;
-  action?: string;
-  method?: string;
   includeMessage?: boolean;
   includePhone?: boolean;
   submitLabel?: string;
@@ -28,12 +24,12 @@ export interface Props {
 const {
   title = 'Get in Touch',
   subtitle = "We'd love to hear from you. Send us a message and we'll respond as soon as possible.",
-  action = '/api/contact',
-  method = 'POST',
   includeMessage = true,
   includePhone = true,
   submitLabel = 'Send Message',
 } = Astro.props;
+
+const web3formsKey = import.meta.env.WEB3FORMS_ACCESS_KEY;
 ---
 
 <section class="py-16 md:py-24 bg-white">
@@ -54,7 +50,10 @@ const {
         </div>
       )}
 
-      <form action={action} method={method} class="space-y-6">
+      <form id="contact-form" class="space-y-6">
+        <!-- Web3Forms Access Key (hidden) -->
+        <input type="hidden" name="access_key" value={web3formsKey} />
+
         <!-- Name Field -->
         <div>
           <label for="name" class="block text-sm font-medium text-neutral-700 mb-2">
@@ -141,8 +140,8 @@ const {
 </section>
 
 <script>
-  // Client-side form handling with AJAX submission
-  const form = document.querySelector('form');
+  // Client-side form handling with Web3Forms AJAX submission
+  const form = document.getElementById('contact-form') as HTMLFormElement;
   const messageDiv = document.getElementById('form-message');
   const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
   const submitText = document.getElementById('submit-text');
@@ -159,12 +158,18 @@ const {
     // Hide any previous messages
     messageDiv?.classList.add('hidden');
 
-    const formData = new FormData(form as HTMLFormElement);
+    const formData = new FormData(form);
+    const object = Object.fromEntries(formData);
+    const json = JSON.stringify(object);
 
     try {
-      const response = await fetch(form.action, {
-        method: form.method,
-        body: formData,
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: json
       });
 
       const result = await response.json();
@@ -184,7 +189,7 @@ const {
         if (messageDiv) {
           messageDiv.classList.remove('hidden', 'bg-green-100', 'text-green-700', 'border-green-300');
           messageDiv.classList.add('bg-red-100', 'text-red-700', 'border', 'border-red-300');
-          messageDiv.textContent = result.error || 'Oops! Something went wrong. Please try again.';
+          messageDiv.textContent = result.message || 'Oops! Something went wrong. Please try again.';
         }
       }
     } catch (error) {
