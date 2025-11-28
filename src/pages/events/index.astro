@@ -1,0 +1,169 @@
+---
+/**
+ * Events Listing Page
+ *
+ * Displays all events with filtering by category.
+ * Shows upcoming events first, with past events in a separate section.
+ */
+
+import { getCollection } from 'astro:content';
+import InnerLayout from '../../layouts/InnerLayout.astro';
+import EventCard from '../../components/library/EventCard.astro';
+
+// Get all events from content collection
+const allEvents = await getCollection('events');
+
+// Get current date for comparison (start of today)
+const now = new Date();
+now.setHours(0, 0, 0, 0);
+
+// Filter out drafts and separate into upcoming and past
+const publishedEvents = allEvents.filter(event => !event.data.draft);
+
+const upcomingEvents = publishedEvents
+  .filter(event => event.data.date >= now)
+  .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf()); // Soonest first
+
+const pastEvents = publishedEvents
+  .filter(event => event.data.date < now)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()); // Most recent first
+
+// Get unique categories for filtering (from upcoming events)
+const categories = ['All', ...new Set(upcomingEvents.map(event => event.data.category))];
+---
+
+<InnerLayout
+  title="Events"
+  description="Discover upcoming events, workshops, and gatherings. Join us for memorable experiences and connect with our community."
+  ogImage="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&h=630&fit=crop"
+  pageTitle="Upcoming Events"
+  pageSubtitle="Join us for workshops, meetups, and community gatherings"
+  containerized={false}
+>
+  <!-- Category Filter -->
+  {categories.length > 1 && (
+    <div class="bg-white border-b border-neutral-200">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="flex flex-wrap gap-3 justify-center">
+          {categories.map((category) => (
+            <button
+              class="category-filter px-5 py-2 rounded-full font-medium transition-all"
+              class:list={[
+                category === 'All'
+                  ? 'bg-primary-600 text-white'
+                  : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+              ]}
+              data-category={category}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  )}
+
+  <!-- Upcoming Events Grid -->
+  <section class="py-12 md:py-16 bg-neutral-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      {upcomingEvents.length > 0 ? (
+        <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {upcomingEvents.map((event) => (
+            <div class="event-item" data-category={event.data.category}>
+              <EventCard
+                title={event.data.title}
+                description={event.data.description}
+                featuredImage={event.data.featuredImage}
+                slug={event.slug}
+                category={event.data.category}
+                date={event.data.date}
+                startTime={event.data.startTime}
+                endTime={event.data.endTime}
+                location={event.data.location}
+                link={event.data.link}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-12">
+          <div class="text-6xl mb-4">📅</div>
+          <h3 class="text-2xl font-bold text-neutral-900 mb-2">No upcoming events</h3>
+          <p class="text-neutral-600">Check back soon for new events!</p>
+        </div>
+      )}
+
+      <!-- No Results Message (for filtering) -->
+      <div id="no-results" class="hidden text-center py-12">
+        <div class="text-6xl mb-4">🔍</div>
+        <h3 class="text-2xl font-bold text-neutral-900 mb-2">No events found</h3>
+        <p class="text-neutral-600">Try selecting a different category</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Past Events Section -->
+  {pastEvents.length > 0 && (
+    <section class="py-12 md:py-16 bg-white border-t border-neutral-200">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-neutral-900 mb-8">Past Events</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 opacity-75">
+          {pastEvents.slice(0, 6).map((event) => (
+            <EventCard
+              title={event.data.title}
+              description={event.data.description}
+              featuredImage={event.data.featuredImage}
+              slug={event.slug}
+              category={event.data.category}
+              date={event.data.date}
+              startTime={event.data.startTime}
+              endTime={event.data.endTime}
+              location={event.data.location}
+              link={event.data.link}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</InnerLayout>
+
+<script>
+  // Category filtering
+  const filterButtons = document.querySelectorAll('.category-filter');
+  const eventItems = document.querySelectorAll('.event-item');
+  const noResults = document.getElementById('no-results');
+
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const category = button.getAttribute('data-category');
+
+      // Update active button
+      filterButtons.forEach(btn => {
+        btn.classList.remove('bg-primary-600', 'text-white');
+        btn.classList.add('bg-neutral-100', 'text-neutral-700', 'hover:bg-neutral-200');
+      });
+      button.classList.remove('bg-neutral-100', 'text-neutral-700', 'hover:bg-neutral-200');
+      button.classList.add('bg-primary-600', 'text-white');
+
+      // Filter events
+      let visibleCount = 0;
+      eventItems.forEach(item => {
+        const itemCategory = item.getAttribute('data-category');
+        if (category === 'All' || itemCategory === category) {
+          item.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+
+      // Show/hide no results message
+      if (visibleCount === 0) {
+        noResults?.classList.remove('hidden');
+      } else {
+        noResults?.classList.add('hidden');
+      }
+    });
+  });
+</script>

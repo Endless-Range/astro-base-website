@@ -1,0 +1,35 @@
+---
+/**
+ * Dynamic Event Page
+ *
+ * Renders individual events from the content collection.
+ */
+
+import { getCollection } from 'astro:content';
+import EventLayout from '../../layouts/EventLayout.astro';
+
+export async function getStaticPaths() {
+  const eventEntries = await getCollection('events');
+  return eventEntries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<EventLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  featuredImage={entry.data.featuredImage}
+  date={entry.data.date}
+  startTime={entry.data.startTime}
+  endTime={entry.data.endTime}
+  location={entry.data.location}
+  category={entry.data.category}
+  link={entry.data.link}
+>
+  <Content />
+</EventLayout>

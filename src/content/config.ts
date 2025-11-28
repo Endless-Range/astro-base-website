@@ -21,6 +21,23 @@ const blog = defineCollection({
   }),
 });
 
+const events = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    startTime: z.string(),
+    endTime: z.string().optional(),
+    location: z.string(),
+    description: z.string(),
+    featuredImage: z.string(),
+    link: z.string().optional(),
+    category: z.string(),
+    draft: z.boolean().default(false),
+  }),
+});
+
 export const collections = {
   blog,
+  events,
 };

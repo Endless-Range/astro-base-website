@@ -1,0 +1,281 @@
+---
+/**
+ * Event Layout
+ *
+ * Layout for individual event pages with date, time, location,
+ * featured image, and optional registration link.
+ *
+ * Props:
+ * @param {string} title - Event title
+ * @param {string} description - Event description
+ * @param {string} ogImage - Social sharing image (defaults to featuredImage)
+ * @param {string} featuredImage - Hero image for the event
+ * @param {Date} date - Event date
+ * @param {string} startTime - Event start time
+ * @param {string} endTime - Event end time (optional)
+ * @param {string} location - Event location
+ * @param {string} category - Event category
+ * @param {string} link - External link for tickets/registration (optional)
+ */
+
+import BaseLayout from './BaseLayout.astro';
+import Navigation from '../components/library/Navigation.astro';
+import Footer from '../components/library/Footer.astro';
+import { Image } from 'astro:assets';
+import { footerConfig } from '../config/footer';
+import { siteConfig } from '../config/site';
+
+export interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  featuredImage: string;
+  date: Date;
+  startTime: string;
+  endTime?: string;
+  location: string;
+  category: string;
+  link?: string;
+}
+
+const {
+  title,
+  description,
+  ogImage,
+  featuredImage,
+  date,
+  startTime,
+  endTime,
+  location,
+  category,
+  link,
+} = Astro.props;
+
+const shareImage = ogImage || featuredImage;
+const siteUrl = Astro.site || siteConfig.url;
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const imageUrl = featuredImage.startsWith('http') ? featuredImage : new URL(featuredImage, siteUrl).href;
+
+// Format date for display
+const formattedDate = new Intl.DateTimeFormat('en-US', {
+  weekday: 'long',
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+}).format(date);
+
+// Format time display
+const timeDisplay = endTime ? `${startTime} - ${endTime}` : startTime;
+
+// Helper to parse time string (e.g., "7:00 PM") to 24h format for ISO
+function parseTime(timeStr: string): string {
+  const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+  if (!match) return '00:00';
+  let hours = parseInt(match[1]);
+  const minutes = match[2];
+  const period = match[3]?.toUpperCase();
+  if (period === 'PM' && hours !== 12) hours += 12;
+  if (period === 'AM' && hours === 12) hours = 0;
+  return `${hours.toString().padStart(2, '0')}:${minutes}`;
+}
+
+// Create ISO datetime strings for schema
+const dateStr = date.toISOString().split('T')[0];
+const startDateTime = `${dateStr}T${parseTime(startTime)}:00`;
+const endDateTime = endTime ? `${dateStr}T${parseTime(endTime)}:00` : null;
+
+// Event Schema (JSON-LD) for SEO
+const eventSchema = {
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": title,
+  "description": description,
+  "image": imageUrl,
+  "startDate": startDateTime,
+  ...(endDateTime && { "endDate": endDateTime }),
+  "eventStatus": "https://schema.org/EventScheduled",
+  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+  "location": {
+    "@type": "Place",
+    "name": location,
+    "address": {
+      "@type": "PostalAddress",
+      "name": location
+    }
+  },
+  ...(link && {
+    "offers": {
+      "@type": "Offer",
+      "url": link,
+      "availability": "https://schema.org/InStock"
+    }
+  }),
+  "organizer": {
+    "@type": "Organization",
+    "name": siteConfig.company.name,
+    "url": siteUrl
+  },
+  "url": canonicalUrl
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogImage={shareImage}
+  ogType="website"
+>
+  <!-- Event Schema JSON-LD -->
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(eventSchema)} slot="head" />
+
+  <Navigation slot="navigation" transparent={false} />
+
+  <article class="pt-24 md:pt-32">
+    <!-- Event Header -->
+    <div class="bg-white py-12 md:py-16">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+          <!-- Category -->
+          <div class="mb-6">
+            <span class="inline-block bg-primary-100 text-primary-700 px-4 py-1.5 rounded-full text-sm font-semibold">
+              {category}
+            </span>
+          </div>
+
+          <!-- Title -->
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-neutral-900 mb-6">
+            {title}
+          </h1>
+
+          <!-- Description -->
+          <p class="text-xl md:text-2xl text-neutral-600 mb-8 leading-relaxed">
+            {description}
+          </p>
+
+          <!-- Event Details -->
+          <div class="flex flex-wrap gap-6 text-neutral-600">
+            <!-- Date -->
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-medium text-neutral-900">{formattedDate}</p>
+                <p class="text-sm text-neutral-500">Date</p>
+              </div>
+            </div>
+
+            <!-- Time -->
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-medium text-neutral-900">{timeDisplay}</p>
+                <p class="text-sm text-neutral-500">Time</p>
+              </div>
+            </div>
+
+            <!-- Location -->
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-medium text-neutral-900">{location}</p>
+                <p class="text-sm text-neutral-500">Location</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Registration/Tickets Button -->
+          {link && (
+            <div class="mt-8">
+              <a
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+              >
+                Register / Get Tickets
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <!-- Featured Image -->
+    <div class="w-full relative overflow-hidden bg-white">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+          <Image
+            src={featuredImage}
+            alt={title}
+            width={1200}
+            height={600}
+            format="webp"
+            quality={85}
+            class="w-full h-auto max-h-[600px] object-cover rounded-lg"
+            loading="eager"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Event Content -->
+    <div class="bg-white py-12 md:py-16">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto prose prose-lg prose-neutral max-w-none
+          prose-headings:font-bold prose-headings:text-neutral-900
+          prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6
+          prose-h3:text-2xl prose-h3:mt-10 prose-h3:mb-4
+          prose-p:text-neutral-700 prose-p:leading-relaxed prose-p:mb-6
+          prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline
+          prose-strong:text-neutral-900 prose-strong:font-semibold
+          prose-ul:my-6 prose-ul:space-y-2
+          prose-ol:my-6 prose-ol:space-y-2
+          prose-li:text-neutral-700 prose-li:leading-relaxed
+          prose-img:rounded-lg prose-img:shadow-lg prose-img:my-8">
+          <slot />
+        </div>
+      </div>
+    </div>
+
+    <!-- Back to Events -->
+    <div class="bg-neutral-50 py-12 border-t border-neutral-200">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+          <a
+            href="/events"
+            class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium transition-colors"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Events
+          </a>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <Footer
+    slot="footer"
+    companyName={footerConfig.companyName}
+    tagline={footerConfig.tagline}
+    columns={footerConfig.columns}
+    socialLinks={footerConfig.socialLinks}
+    backgroundColor={footerConfig.backgroundColor}
+  />
+</BaseLayout>
