@@ -19,37 +19,37 @@ export const footerConfig = {
     {
       title: 'Product',
       links: [
-        { label: 'Features', href: '/features' },
-        { label: 'Pricing', href: '/pricing' },
-        { label: 'Security', href: '/security' },
-        { label: 'Roadmap', href: '/roadmap' }
+        { label: 'Features', href: '/features/' },
+        { label: 'Pricing', href: '/pricing/' },
+        { label: 'Security', href: '/security/' },
+        { label: 'Roadmap', href: '/roadmap/' }
       ]
     },
     {
       title: 'Company',
       links: [
-        { label: 'About', href: '/about' },
-        { label: 'Services', href: '/services' },
-        { label: 'Blog', href: '/blog' },
-        { label: 'Contact', href: '/contact' }
+        { label: 'About', href: '/about/' },
+        { label: 'Services', href: '/services/' },
+        { label: 'Blog', href: '/blog/' },
+        { label: 'Contact', href: '/contact/' }
       ]
     },
     {
       title: 'Resources',
       links: [
-        { label: 'Documentation', href: '/docs' },
-        { label: 'Support', href: '/support' },
-        { label: 'API', href: '/api' },
-        { label: 'Community', href: '/community' }
+        { label: 'Documentation', href: '/docs/' },
+        { label: 'Support', href: '/support/' },
+        { label: 'API', href: '/api/' },
+        { label: 'Community', href: '/community/' }
       ]
     },
     {
       title: 'Legal',
       links: [
-        { label: 'Privacy Policy', href: '/privacy' },
-        { label: 'Terms of Service', href: '/terms' },
-        { label: 'Cookie Policy', href: '/cookies' },
-        { label: 'Licenses', href: '/licenses' }
+        { label: 'Privacy Policy', href: '/privacy/' },
+        { label: 'Terms of Service', href: '/terms/' },
+        { label: 'Cookie Policy', href: '/cookies/' },
+        { label: 'Licenses', href: '/licenses/' }
       ]
     }
   ],
@@ -87,8 +87,8 @@ export const footerVariants = {
         title: 'Quick Links',
         links: [
           { label: 'Home', href: '/' },
-          { label: 'About', href: '/about' },
-          { label: 'Contact', href: '/contact' }
+          { label: 'About', href: '/about/' },
+          { label: 'Contact', href: '/contact/' }
         ]
       }
     ],
